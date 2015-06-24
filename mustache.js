@@ -25,6 +25,14 @@
     return typeof object === 'function';
   }
 
+  /**
+   * More correct typeof string handling array
+   * which normally returns typeof 'object'
+   */
+  function typeStr (obj) {
+    return isArray(obj) ? 'array' : typeof obj;
+  }
+
   function escapeRegExp (string) {
     return string.replace(/[\-\[\]{}()*+?.,\\\^$|#\s]/g, '\\$&');
   }
@@ -584,6 +592,10 @@
    * default writer.
    */
   mustache.render = function render (template, view, partials) {
+    if (typeof template !== 'string') {
+      throw new TypeError('Invalid template! Template should be a "string" but "' + typeStr(template) + '" was given');
+    }
+
     return defaultWriter.render(template, view, partials);
   };
 
